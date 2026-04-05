@@ -154,6 +154,37 @@
     ]);
   }
 
+  function makeDraggable(dialog) {
+    var tb = dialog.querySelector('.title-bar') || dialog.firstChild;
+    var isDragging = false;
+    var dragOffsetX = 0;
+    var dragOffsetY = 0;
+    tb.style.cursor = 'move';
+    tb.addEventListener('mousedown', function (e) {
+      if (e.target.closest('.title-btn')) return;
+      isDragging = true;
+      var rect = dialog.getBoundingClientRect();
+      dragOffsetX = e.clientX - rect.left;
+      dragOffsetY = e.clientY - rect.top;
+      dialog.style.zIndex = 8500 + Math.floor(Math.random() * 500);
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', function (e) {
+      if (!isDragging) return;
+      var wrapRect = document.getElementById('crt-wrapper').getBoundingClientRect();
+      var scale = wrapRect.width / 640;
+      var x = (e.clientX - wrapRect.left) / scale - dragOffsetX;
+      var y = (e.clientY - wrapRect.top) / scale - dragOffsetY;
+      x = Math.max(0, Math.min(x, 640 - dialog.offsetWidth));
+      y = Math.max(0, Math.min(y, 480 - dialog.offsetHeight - 28));
+      dialog.style.left = x + 'px';
+      dialog.style.top = y + 'px';
+    });
+    document.addEventListener('mouseup', function () {
+      isDragging = false;
+    });
+  }
+
   // --- Error Storm ---
   function triggerStorm() {
     stormMode = true;
@@ -220,6 +251,10 @@
       dialog.appendChild(btnRow);
 
       wrapper.appendChild(dialog);
+      makeDraggable(dialog);
+      if (window.Win94Audio && window.Win94Audio.playDialogChord) {
+        window.Win94Audio.playDialogChord(1.5);
+      }
       stormDialogs.push(dialog);
 
       stormX += 15;
@@ -357,6 +392,10 @@
     dialog.appendChild(btnRow);
 
     wrapper.appendChild(dialog);
+    makeDraggable(dialog);
+    if (window.Win94Audio && window.Win94Audio.playDialogChord) {
+      window.Win94Audio.playDialogChord();
+    }
     randomDialogs.push(dialog);
 
     scheduleNext();

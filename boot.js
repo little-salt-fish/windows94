@@ -40,6 +40,9 @@
     }
     document.addEventListener('click', resumeCtx);
     document.addEventListener('keydown', resumeCtx);
+    if (window.Win94Audio) {
+      window.Win94Audio.playDialogChord = playDialogChord;
+    }
   }
 
   function playPowerHum() {
@@ -121,6 +124,32 @@
         osc.start(ctx.currentTime + offset);
         osc.stop(ctx.currentTime + offset + 2.5);
       })(freqs[i], i * 0.06);
+    }
+  }
+
+  function playDialogChord(pitchMult) {
+    var ctx = window.Win94Audio; if (!ctx) return;
+    if (ctx.state === 'suspended') ctx.resume();
+    var mult = pitchMult || 1;
+    var notes = [
+      { freq: 523.25, delay: 0, dur: 0.15 },
+      { freq: 659.25, delay: 0.08, dur: 0.25 }
+    ];
+    for (var i = 0; i < notes.length; i++) {
+      (function (n) {
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'square';
+        osc.frequency.value = n.freq * mult;
+        var t = ctx.currentTime + n.delay;
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.12, t + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + n.dur);
+        osc.start(t);
+        osc.stop(t + n.dur + 0.05);
+      })(notes[i]);
     }
   }
 
