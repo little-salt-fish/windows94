@@ -1286,6 +1286,208 @@
     }
   }
 
+  // ── Ad Popup System ──────────────────────────────────
+
+  var AD_DATA = [
+    {
+      id: 'teams',
+      titleColor: '#4B0082',
+      title: '\uD83D\uDCE2 Teams Messenger 94\u2122',
+      footer: '1-800-TEAMS-94 \u00B7 Order by fax',
+      crashMsg: 'Teams Messenger requires a network.\nYou have a telephone line.\nThis is not the same thing.\nLocal rates apply.',
+      logoHTML: function () {
+        var wrap = document.createElement('div');
+        wrap.className = 'ad-logo';
+        wrap.style.background = '#4B0082';
+        wrap.style.imageRendering = 'pixelated';
+        // White "T"
+        var t1 = document.createElement('div');
+        t1.style.cssText = 'position:absolute;top:4px;left:6px;width:20px;height:4px;background:#fff;';
+        var t2 = document.createElement('div');
+        t2.style.cssText = 'position:absolute;top:8px;left:13px;width:6px;height:18px;background:#fff;';
+        // Floppy disk bottom-right
+        var f1 = document.createElement('div');
+        f1.style.cssText = 'position:absolute;bottom:2px;right:2px;width:8px;height:8px;background:#808080;';
+        var f2 = document.createElement('div');
+        f2.style.cssText = 'position:absolute;bottom:3px;right:4px;width:4px;height:3px;background:#333;';
+        wrap.appendChild(t1);
+        wrap.appendChild(t2);
+        wrap.appendChild(f1);
+        wrap.appendChild(f2);
+        return wrap;
+      },
+      body:
+        'Office romance.\n'
+        + 'On a floppy disk.\n'
+        + '\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n'
+        + '\u2713 Memos in 3-5 business days\n'
+        + '\u2713 Ignore colleagues, formally\n'
+        + '\u2713 Water cooler, virtualised\n'
+        + '\u2713 Virtual happy hour on\n'
+        + '  your holidays\n'
+        + '\n'
+        + '\uD83D\uDCDE Works with your telephone.\n'
+        + '   Local rates apply.\n'
+        + '   Long distance rates apply.\n'
+        + '   We are sorry.\n'
+        + '\n'
+        + '~~$299~~  $249.95/user/yr\n'
+        + 'Billed in floppy disks.\n'
+        + 'Ships Q3 1997. Probably.'
+    },
+    {
+      id: 'outlook',
+      titleColor: '#003087',
+      title: '\uD83D\uDCE2 Outlook Electronic Mail 94\u2122',
+      footer: '1-800-OUTLOOK-BIZ \u00B7 Fax only',
+      crashMsg: 'Outlook cannot send email.\nNobody you know has email.\n\nYour office romance has already\nbeen forwarded to your manager\'s\nmanager. For the records.\n\n47 addresses left. Stock limited.\nReplyAll incidents not capped.\nWe are aware. For the record.',
+      logoHTML: function () {
+        var wrap = document.createElement('div');
+        wrap.className = 'ad-logo';
+        wrap.style.background = '#003087';
+        wrap.style.imageRendering = 'pixelated';
+        // Envelope
+        var e1 = document.createElement('div');
+        e1.style.cssText = 'position:absolute;top:8px;left:5px;width:22px;height:14px;background:#fff;';
+        var e2 = document.createElement('div');
+        e2.style.cssText = 'position:absolute;top:8px;left:5px;width:0;height:0;border-left:11px solid transparent;border-right:11px solid transparent;border-top:8px solid #003087;';
+        // Globe bottom-right
+        var g1 = document.createElement('div');
+        g1.style.cssText = 'position:absolute;bottom:2px;right:2px;width:8px;height:8px;background:#00AAFF;border-radius:50%;';
+        var g2 = document.createElement('div');
+        g2.style.cssText = 'position:absolute;bottom:5px;right:3px;width:6px;height:1px;background:#fff;';
+        wrap.appendChild(e1);
+        wrap.appendChild(e2);
+        wrap.appendChild(g1);
+        wrap.appendChild(g2);
+        return wrap;
+      },
+      body:
+        'For seriousness only.\n'
+        + 'For the records.\n'
+        + '\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n'
+        + '\u2713 Emails nobody asked for\n'
+        + '\u2713 CC everyone, always\n'
+        + '\u2713 Archive until death\n'
+        + '\n'
+        + '\uD83C\uDD93 FREE email address!\n'
+        + '   Stock: 47 remaining.\n'
+        + '   Unclaimed since 1992.\n'
+        + '   Internet not included.\n'
+        + '   Internet not ready.\n'
+        + '\n'
+        + '\u26A0\uFE0F Privacy Notice:\n'
+        + '  Your office romance lives\n'
+        + '  in your manager\'s Inbox.\n'
+        + '  For the records. Always.\n'
+        + '\n'
+        + '\u2795 ReplyAll Protection\u2122\n'
+        + '   Protects you from yourself.\n'
+        + '   ~~$999~~  $699/user/yr\n'
+        + '   Incidents not capped.\n'
+        + '\n'
+        + '~~$399~~  $349.95 one-time\n'
+        + 'No refunds. For the record.\n'
+        + 'Ships 6-8 weeks. No tracking.'
+    }
+  ];
+
+  var adTimer = null;
+  var adVisible = false;
+
+  function buildAdPopup(ad) {
+    var popup = document.createElement('div');
+    popup.className = 'ad-popup';
+    popup.id = 'ad-popup';
+
+    // Title bar
+    var titleBar = document.createElement('div');
+    titleBar.className = 'ad-title-bar';
+    titleBar.style.background = ad.titleColor;
+    var titleText = document.createElement('span');
+    titleText.textContent = ad.title;
+    var closeBtn = document.createElement('span');
+    closeBtn.className = 'ad-close';
+    closeBtn.textContent = 'x';
+    closeBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      dismissAd();
+    });
+    titleBar.appendChild(titleText);
+    titleBar.appendChild(closeBtn);
+    popup.appendChild(titleBar);
+
+    // Logo
+    popup.appendChild(ad.logoHTML());
+
+    // Body
+    var body = document.createElement('div');
+    body.className = 'ad-body';
+    body.textContent = ad.body;
+    body.addEventListener('click', function () {
+      dismissAd();
+      Crash.trigger(ad.crashMsg);
+    });
+    popup.appendChild(body);
+
+    // Footer
+    var footer = document.createElement('div');
+    footer.className = 'ad-footer';
+    footer.textContent = ad.footer;
+    popup.appendChild(footer);
+
+    return popup;
+  }
+
+  function dismissAd() {
+    var popup = document.getElementById('ad-popup');
+    if (!popup) { adVisible = false; scheduleNextAd(); return; }
+    popup.classList.remove('visible');
+    setTimeout(function () {
+      popup.remove();
+      adVisible = false;
+      scheduleNextAd();
+    }, 200);
+  }
+
+  function showAd() {
+    if (adVisible) return;
+    var existing = document.getElementById('ad-popup');
+    if (existing) existing.remove();
+
+    var ad = AD_DATA[Math.floor(Math.random() * AD_DATA.length)];
+    var popup = buildAdPopup(ad);
+
+    var wrapper = document.getElementById('crt-wrapper');
+    if (!wrapper) return;
+    wrapper.appendChild(popup);
+
+    adVisible = true;
+
+    // Trigger slide-in on next frame
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        popup.classList.add('visible');
+      });
+    });
+
+    // Auto-dismiss after 12s
+    adTimer = setTimeout(function () {
+      dismissAd();
+    }, 12000);
+  }
+
+  function scheduleNextAd() {
+    clearTimeout(adTimer);
+    var wait = 20000 + Math.random() * 25000; // 20-45s
+    adTimer = setTimeout(showAd, wait);
+  }
+
+  function startAds() {
+    var firstDelay = 15000 + Math.random() * 15000; // 15-30s
+    adTimer = setTimeout(showAd, firstDelay);
+  }
+
   function init() {
     wireDesktopIcons();
     initStartMenu();
@@ -1294,6 +1496,7 @@
 
   window.Apps = {
     init: init,
+    startAds: startAds,
     showUpsellDialog: showUpsellDialog,
     openMyComputer: openMyComputer,
     openCDrive: openCDrive,

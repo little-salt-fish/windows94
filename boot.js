@@ -14,7 +14,7 @@
     'Mouse driver installed......... OK',
     '',
     'Loading Windows 94...',
-    'C:\\> _'
+    'C:\\> '
   ];
 
   function delay(ms) {
@@ -201,12 +201,14 @@
       await delay(600 + Math.random() * 300);
     }
 
-    var cursor = screen.lastElementChild;
-    var visible = true;
+    var lastLine = screen.lastElementChild;
+    var cursorSpan = document.createElement('span');
+    cursorSpan.id = 'bios-cursor';
+    cursorSpan.textContent = '_';
+    lastLine.appendChild(cursorSpan);
     var blinkId = setInterval(function () {
-      visible = !visible;
-      cursor.style.opacity = visible ? '1' : '0';
-    }, 500);
+      cursorSpan.style.opacity = cursorSpan.style.opacity === '0' ? '1' : '0';
+    }, 80);
 
     await delay(1500);
     clearInterval(blinkId);
@@ -359,6 +361,9 @@
     }
     if (window.Crash && Crash.startRandomDialogs) {
       Crash.startRandomDialogs();
+    }
+    if (window.Apps && window.Apps.startAds) {
+      Apps.startAds();
     }
   }
 
