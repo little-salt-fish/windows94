@@ -58,23 +58,24 @@ html, body {
   overflow: hidden;
 }
 
-.icon {
+#desktop-icons {
   position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.icon {
   width: 72px;
-  height: 84px;
+  height: 70px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding-top: 4px;
+  gap: 4px;
   cursor: default;
 }
-
-#icon-mycomputer { top: 10px; left: 14px; }
-#icon-mydocs { top: 104px; left: 14px; }
-#icon-network { top: 198px; left: 14px; }
-#icon-recycle { top: 292px; left: 14px; }
-#icon-internet { top: 386px; left: 14px; }
 
 .icon-img {
   width: 32px;
@@ -84,16 +85,16 @@ html, body {
   align-items: center;
   justify-content: center;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .icon-label {
   color: var(--white);
-  text-shadow: 1px 1px 0 #000, -1px 1px 0 #000, 0 1px 0 #000;
+  text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
   text-align: center;
   word-break: break-word;
-  width: 100%;
+  max-width: 72px;
   padding: 1px 2px;
-  margin-top: 3px;
   line-height: 1.3;
 }
 
@@ -458,6 +459,7 @@ html, body {
   height: 480px;
   top: 50%;
   left: 50%;
+  transform: translate(-50%, -50%);
   transform-origin: center center;
   overflow: hidden;
   border-radius: 8px;
@@ -672,4 +674,132 @@ html, body {
   .menu-bar {
     font-size: 11px;
   }
+}
+
+.payment-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  z-index: 10001;
+  background: #C0C0C0;
+  box-shadow: inset -1px -1px #000,
+    inset 1px 1px #fff,
+    inset -2px -2px #808080,
+    inset 2px 2px #dfdfdf;
+}
+
+.payment-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 10000;
+}
+
+.address-box {
+  background: #fff;
+  padding: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 8px;
+  word-break: break-all;
+  user-select: text;
+  -webkit-user-select: text;
+  box-shadow: inset 1px 1px #808080,
+    inset -1px -1px #fff;
+  margin: 4px 0;
+  line-height: 1.6;
+}
+
+.payment-disclaimer {
+  background: #fff;
+  padding: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 8px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  box-shadow: inset 1px 1px #808080,
+    inset -1px -1px #fff;
+  margin: 6px 0;
+}
+
+.copy-btn {
+  width: 100%;
+  padding: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 8px;
+  background: #C0C0C0;
+  border: none;
+  cursor: pointer;
+  box-shadow: inset -1px -1px #000,
+    inset 1px 1px #fff,
+    inset -2px -2px #808080,
+    inset 2px 2px #dfdfdf;
+  margin-bottom: 4px;
+}
+
+/* ── Inbox ─────────────────────────────── */
+
+.inbox-list {
+  overflow-y: auto;
+  border-bottom: 2px solid #808080;
+}
+
+.inbox-row {
+  display: flex;
+  align-items: center;
+  padding: 2px 4px;
+  cursor: pointer;
+  font-size: 11px;
+  gap: 8px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.inbox-row:hover {
+  background: #000080 !important;
+  color: #fff;
+}
+
+.inbox-row.unread {
+  font-weight: bold;
+}
+
+.inbox-row.urgent {
+  background: #fff0f0 !important;
+  color: #CC0000;
+}
+
+.inbox-row.urgent:hover {
+  background: #CC0000 !important;
+  color: #fff;
+}
+
+.inbox-row.selected {
+  background: #000080 !important;
+  color: #fff;
+}
+
+.inbox-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  background: #fff;
+}
+
+.inbox-headers {
+  background: #C0C0C0;
+  padding: 4px 8px;
+  font-size: 10px;
+  border-bottom: 1px solid #808080;
+  font-family: 'Courier New', monospace;
+}
+
+.unread-dot {
+  color: #000080;
+  font-size: 10px;
+  width: 10px;
 }

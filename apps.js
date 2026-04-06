@@ -822,7 +822,8 @@
       'icon-mydocs': openMyDocuments,
       'icon-network': openNetworkNeighborhood,
       'icon-recycle': openRecycleBin,
-      'icon-internet': openInternet
+      'icon-internet': openInternet,
+      'icon-inbox': openInbox
     };
 
     Object.keys(iconMap).forEach(function (id) {
@@ -925,6 +926,29 @@
       if (window.BurnIn) BurnIn.onUpsellNeverShow();
     });
 
+    var donateBtn = document.createElement('button');
+    donateBtn.textContent = '🔑 ACTIVATE 7-DAY TRIAL — $1.00';
+    donateBtn.style.cssText = [
+      'width:100%',
+      'padding:6px 4px',
+      'margin-bottom:6px',
+      'background:#AA8800',
+      'color:#fff',
+      'font-family:Courier New,monospace',
+      'font-size:9px',
+      'font-weight:bold',
+      'border:none',
+      'cursor:pointer',
+      'box-shadow:inset -1px -1px #000,' +
+        'inset 1px 1px #ffdd00,' +
+        'inset -2px -2px #886600,' +
+        'inset 2px 2px #ffee88',
+    ].join(';');
+    donateBtn.addEventListener('click', function () {
+      showPaymentModal();
+    });
+
+    btnRow.appendChild(donateBtn);
     btnRow.appendChild(buyBtn);
     btnRow.appendChild(laterBtn);
     btnRow.appendChild(noBtn);
@@ -938,6 +962,124 @@
     if (d) d.remove();
     var o = document.getElementById('upsell-overlay');
     if (o) o.remove();
+  }
+
+  function showPaymentModal() {
+    var wrapper = document.getElementById('crt-wrapper');
+
+    var overlay = document.createElement('div');
+    overlay.className = 'payment-modal-overlay';
+    wrapper.appendChild(overlay);
+
+    var modal = document.createElement('div');
+    modal.className = 'payment-modal';
+
+    // Title bar
+    var titleBar = document.createElement('div');
+    titleBar.className = 'title-bar';
+    titleBar.style.background = '#003087';
+    var titleText = document.createElement('span');
+    titleText.className = 'title-text';
+    titleText.textContent = '\uD83D\uDCB3 ScreenSaver Pro 94\u2122 \u2014 Checkout';
+    titleBar.appendChild(titleText);
+    var closeBtn = document.createElement('button');
+    closeBtn.className = 'title-close';
+    closeBtn.textContent = '\u00D7';
+    closeBtn.addEventListener('click', function () {
+      modal.remove();
+      overlay.remove();
+    });
+    titleBar.appendChild(closeBtn);
+    modal.appendChild(titleBar);
+
+    var content = document.createElement('div');
+    content.style.cssText = 'padding:10px;';
+
+    // Header section
+    var header = document.createElement('div');
+    header.style.cssText = 'background:#dfdfdf;text-align:center;padding:8px;margin-bottom:6px;';
+    var h1 = document.createElement('div');
+    h1.style.cssText = 'font-weight:bold;font-size:10px;margin-bottom:4px;';
+    h1.textContent = '7-Day Trial Activation';
+    var h2 = document.createElement('div');
+    h2.style.cssText = 'font-family:"Courier New",monospace;font-size:9px;';
+    h2.textContent = 'Price: $1.00 USD';
+    var h3 = document.createElement('div');
+    h3.style.cssText = 'font-family:"Courier New",monospace;font-size:9px;';
+    h3.textContent = '\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500';
+    header.appendChild(h1);
+    header.appendChild(h2);
+    header.appendChild(h3);
+    content.appendChild(header);
+
+    // USDT payment section
+    var usdtLabel = document.createElement('div');
+    usdtLabel.style.cssText = 'font-weight:bold;font-size:9px;margin:6px 0;';
+    usdtLabel.textContent = '\u20AE Pay with USDT (TRC20)';
+    content.appendChild(usdtLabel);
+
+    var addressBox = document.createElement('div');
+    addressBox.className = 'address-box';
+    addressBox.textContent = 'TFMpor1KBLy2wVaT8WHyBJAdPqzL3o5Vty';
+    content.appendChild(addressBox);
+
+    var copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-btn';
+    copyBtn.textContent = '\uD83D\uDCCB Copy Address';
+    copyBtn.addEventListener('click', function () {
+      navigator.clipboard.writeText(
+        'TFMpor1KBLy2wVaT8WHyBJAdPqzL3o5Vty'
+      ).then(function () {
+        copyBtn.textContent = '\u2713 Copied!';
+        setTimeout(function () {
+          copyBtn.textContent = '\uD83D\uDCCB Copy Address';
+        }, 2000);
+      });
+    });
+    content.appendChild(copyBtn);
+
+    // Network note
+    var note = document.createElement('div');
+    note.style.cssText = 'color:#808080;font-size:8px;font-style:italic;line-height:1.6;margin:4px 0;';
+    note.textContent = 'Network: TRON (TRC20) only\nAmount: $1.00 USDT\nSend exact amount to activate.';
+    note.style.whiteSpace = 'pre-wrap';
+    content.appendChild(note);
+
+    // Divider
+    var divider = document.createElement('div');
+    divider.style.cssText = 'font-family:"Courier New",monospace;font-size:9px;margin:6px 0;';
+    divider.textContent = '\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500';
+    content.appendChild(divider);
+
+    // Disclaimer
+    var disclaimer = document.createElement('div');
+    disclaimer.className = 'payment-disclaimer';
+    disclaimer.textContent =
+      'This is a voluntary contribution.\n' +
+      'You are really paying real money.\n' +
+      'Perhaps this is the only real\n' +
+      'thing in Windows 94.\n\n' +
+      'Windows 94 remains free forever.\n' +
+      'You are simply a person of culture.\n\n' +
+      'We are grateful.\n' +
+      'The computer is also grateful.\n' +
+      'The computer does not have feelings.\n' +
+      'Probably.';
+    content.appendChild(disclaimer);
+
+    // Close button
+    var bottomBtn = document.createElement('button');
+    bottomBtn.className = 'dialog-btn';
+    bottomBtn.style.cssText = 'width:100%;font-size:8px;height:auto;padding:4px 8px;margin-top:6px;';
+    bottomBtn.textContent = 'Close \u2014 I will think about it';
+    bottomBtn.addEventListener('click', function () {
+      modal.remove();
+      overlay.remove();
+    });
+    content.appendChild(bottomBtn);
+
+    modal.appendChild(content);
+    wrapper.appendChild(modal);
   }
 
   function openAviPlayer() {
@@ -1488,6 +1630,366 @@
     adTimer = setTimeout(showAd, firstDelay);
   }
 
+  // ── Inbox App ──────────────────────────────────
+
+  var INBOX_EMAILS = [
+    {
+      unread: true, urgent: false,
+      from: 'Ms. Patricia Holloway',
+      fromDetail: '(Talent Acquisition, Apple Computer, Inc.)',
+      subject: 'Career Opportunity \u2014 Cupertino, CA [CONFIDENTIAL]',
+      received: 'Tue 11/15/94 9:00AM',
+      headers: 'From:    Patricia Holloway\n         <pholloway@apple.com>\nTo:      Dear PC User\nDate:    Tuesday, November 15, 1994 9:00 AM\nSubject: Career Opportunity \u2014 Cupertino, CA\n         [CONFIDENTIAL]',
+      body: 'Dear PC User,\n\nMy name is Patricia Holloway,\nSenior Talent Acquisition Manager,\nApple Computer, Inc.\n\nI am writing to you today regarding\na unique and highly confidential\ncareer opportunity at our Cupertino\nheadquarters.\n\nWe are building something.\n\nWe cannot tell you what it is.\n\nWhat we can tell you is this:\n\n  \u2022 It will be announced in 2007.\n  \u2022 It is not necessarily a computer.\n    (We are Apple Computer, Inc.\n     We may revisit the name.\n     We don\'t know yet.\n     Please don\'t tell anyone.)\n  \u2022 It will fit in your pocket.\n    (This is also confidential.\n     Please forget you read that.)\n  \u2022 It will change everything.\n    (We say this about everything.\n     This time we mean it.\n     We think.)\n\nTHE ROLE:\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nTitle:       [REDACTED]\nDepartment:  Project [REDACTED]\nReports to:  [REDACTED]\nLocation:    Cupertino, CA\n             (The secret building.\n              You will be told which\n              one on your first day.\n              If you have a first day.)\n\nRESPONSIBILITIES:\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  \u2022 Work on [REDACTED]\n  \u2022 Collaborate with [REDACTED]\n    on the [REDACTED] component\n  \u2022 Attend meetings about the thing\n    without mentioning the thing\n  \u2022 Sign 14 NDAs minimum\n    (We will need them back.\n     All 14. Notarized.)\n  \u2022 Refer to the project internally\n    as \'Purple\' or \'the device\'\n    or \'you know what\' or simply\n    a meaningful look across the room\n  \u2022 Not tell your spouse.\n    (We are serious about this one.)\n  \u2022 Not tell your children.\n  \u2022 Not tell your dog.\n    (Dogs cannot keep secrets.\n     We learned this in Phase 1.)\n\nREQUIRED SKILLS:\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  \u2713 Discretion (essential)\n  \u2713 Silence (essential)\n  \u2713 Ability to forget things\n    on command (essential)\n  \u2713 Engineering, design, software,\n    hardware, materials science,\n    supply chain, antenna theory,\n    miniaturization, battery chemistry,\n    human interface design, or\n    literally anything else\n    (helpful but secondary to\n     the discretion thing)\n  \u2713 Comfortable saying \'I work\n    in consumer products\' when\n    asked what you do\n  \u2713 Can eat lunch near other\n    employees without accidentally\n    revealing the nature of the thing\n\nPREFERRED SKILLS:\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  \u25E6 Have never spoken to anyone\n    from a press publication\n  \u25E6 Do not have a blog\n    (We are monitoring this.\n     We don\'t know what a blog is yet.\n     We will find out by 1997.)\n  \u25E6 Comfortable with ambiguity\n    (Example: \'What am I building?\'\n     Answer: Yes.)\n\nCOMPENSATION:\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  Salary:  Competitive\n           (We will not say how\n            competitive. See above:\n            discretion.)\n  Equity:  Options in Apple Computer\n           (or whatever we end up\n            calling ourselves)\n  Benefits: Medical, dental, vision\n            (ironic given what\n             we are building)\n            (that\'s all we\'ll say)\n\nHOW TO APPLY:\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nReply to this message with:\n  1. Your resume\n  2. A cover letter explaining\n     why you can keep a secret\n  3. Evidence that you have kept\n     a secret (without revealing\n     what the secret was)\n     (We understand the difficulty)\n     (We appreciate the effort)\n\nPlease do not reply on a PC.\nThe irony is not lost on us.\nWe are reaching out anyway.\nWe are humble like that.\n\nWe look forward to hearing from you.\n\nOr not hearing from you.\nThat would also be appropriate.\n\nYours discreetly,\n\nPatricia Holloway\nSenior Talent Acquisition Manager\nApple Computer, Inc.\n1 Infinite Loop, Cupertino, CA 95014\n\nCONFIDENTIALITY NOTICE:\nThis email and its contents are\nconfidential. If you have received\nthis in error, please delete it,\nforget you read it, and consider\na career in a less secretive industry.\n\nIf you received this intentionally:\nWelcome to the process.\nTell no one.\nNot even us.\nWe will be in touch.\n\nP.S. We are not building a phone.\n     That would be absurd.\n     Please disregard any pocket\n     references above.\n     Thank you.'
+    },
+    {
+      unread: true, urgent: false,
+      from: 'Sandra',
+      fromDetail: '(Ex-Wife)',
+      subject: 'Re: Re: Re: Re: The Boxes',
+      received: 'Mon 11/14/94 11:47PM',
+      headers: 'From:    Sandra <sandra@compuserve.com>\nTo:      You\nDate:    Monday, November 14, 1994 11:47 PM\nSubject: Re: Re: Re: Re: The Boxes',
+      body: 'The boxes are still here.\n\nAll fourteen of them.\nIn the hallway.\nWhere you left them.\nIn March.\n\nI have counted them every day.\nThey have not moved.\nI have considered moving them myself.\nI have decided not to.\nThis is your problem.\n\nBox #7 appears to be making a sound.\nI have chosen not to investigate.\n\nThe cat has also chosen a box.\nShe seems happy.\nOne of us should be.\n\nPlease collect them by Friday.\nFriday of this century, preferably.\n\nSandra\n\nP.S. I found your backup of Oregon Trail.\nI deleted it.\nI feel nothing.'
+    },
+    {
+      unread: true, urgent: true,
+      from: 'Richard H.',
+      fromDetail: '(Demanding Boss)',
+      subject: 'WHERE IS THE REPORT \u2014 FINAL WARNING',
+      received: function () {
+        var now = new Date();
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        return 'Today ' + months[now.getMonth()] + ' ' + now.getDate() + ' 8:03AM';
+      },
+      headers: function () {
+        var now = new Date();
+        return 'From:    Richard H. <rhawkins@meridian-corp.com>\nTo:      You\nDate:    ' + now.toLocaleDateString('en-US', {weekday:'long',year:'numeric',month:'long',day:'numeric'}) + ' 8:03 AM\nSubject: WHERE IS THE REPORT \u2014 FINAL WARNING';
+      },
+      body: function () {
+        var now = new Date();
+        now.setMinutes(now.getMinutes() + 1);
+        var hh = now.getHours() % 12 || 12;
+        var mm = now.getMinutes().toString().padStart(2, '0');
+        var ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+        var deadline = hh + ':' + mm + ' ' + ampm;
+        return 'I sent you this at 7:45.\nIt is now 8:03.\nYou have not replied.\n\nThe board meets at 9:00.\nI need the Q4 projections.\nThe FULL Q4 projections.\nNot the ones from last quarter.\nNot the ones from the quarter before that.\nTHE CURRENT ONES.\n\nI know you have a computer.\nI watched IT install it.\nIt took three hours.\nI watched the whole thing.\nYou have no excuses.\n\nReply by ' + deadline + '.\nNot a suggestion.\n\n\u2014 R. Hawkins\n  VP Operations, Meridian Corp\n  \'Excellence Through Accountability\'\n  (This slogan was not my idea)\n\nP.S. If I do not hear from you by\n' + deadline + ' today,\nI am forwarding this to HR.\nHR does not have computers yet.\nThey will find out eventually.';
+      }
+    },
+    {
+      unread: true, urgent: false,
+      from: 'Citizens for Progress PAC',
+      fromDetail: '(Political Campaign, Unknown Party)',
+      subject: 'Your Country Is Watching. So Are We.',
+      received: 'Sun 11/13/94 6:00AM',
+      headers: 'From:    info@citizensforprogress-pac.org\nTo:      Registered Voter\nDate:    Sunday, November 13, 1994 6:00 AM\nSubject: Your Country Is Watching. So Are We.',
+      body: 'Dear Registered Voter,\n\nYou matter.\nYour vote matters.\nYour $25 matters more.\n\nAmerica stands at a crossroads.\nWe have been at this crossroads since 1776.\nWe are still here.\nThe crossroads is very large.\n\nOur candidate believes in:\n  \u2713 Freedom (the good kind)\n  \u2713 Values (the correct ones)\n  \u2713 Economy (going up, ideally)\n  \u2713 Security (from the bad ones)\n  \u2713 Future (generally)\n\nThe other candidate believes in:\n  \u2717 The opposite of all of the above\n  \u2717 Probably other bad things too\n  \u2717 We cannot be more specific\n    for legal reasons\n\nDonate $25 today.\nOr $50.\nOr $100.\nThere is no upper limit.\nThis is also legal.\nWe checked.\n\nWe know you have a computer.\nWe know a lot of things.\n\nCitizens for Progress PAC\n\'Progress. For Citizens. Probably.\'\n\n(Paid for by Citizens for Progress PAC.\n Not authorized by any candidate.\n Your data has been retained.\n For progress.)'
+    },
+    {
+      unread: true, urgent: false,
+      from: 'Made Wijaya',
+      fromDetail: '(Bali Harmony Spiritual Center)',
+      subject: 'Find Yourself. Lose Your Luggage.',
+      received: 'Sat 11/12/94 7:45AM',
+      headers: 'From:    made@baliharmony-retreat.co.id\nTo:      Seeking Soul\nDate:    Saturday, November 12, 1994 7:45 AM\nSubject: Find Yourself. Lose Your Luggage.',
+      body: 'Greetings from Ubud, Bali.\n\nWe sense you are tired.\nNot physically tired.\nSpiritually tired.\nThe kind of tired that a\nfloppy disk cannot fix.\n\nBali Harmony Spiritual Center\npresents:\n\n  \u2726 THE 14-DAY DIGITAL DETOX RETREAT \u2726\n  (We do not know what digital means yet.\n   We will figure it out by 2010.)\n\nPROGRAM INCLUDES:\n  \u2713 Dawn rice field meditation\n  \u2713 Balinese sound healing\n    (gongs. many gongs.)\n  \u2713 Ayurvedic cuisine\n    (you will not enjoy it at first)\n    (then you will miss it forever)\n  \u2713 Temple purification ceremony\n  \u2713 Confronting the self\n    (optional but recommended)\n  \u2713 Confronting the ex-wife situation\n    (also optional)\n    (we have seen the boxes email)\n    (we know everything)\n\nPRICE: $1,200 USD all-inclusive\n       (flights not included)\n       (self not included)\n       (you must bring that yourself)\n\nDATES: Jan 7 \u2014 Jan 21, 1995\nLOCATION: Ubud, Bali, Indonesia\n           It is very green here.\n           The Wi-Fi is not available.\n           Wi-Fi is not invented yet.\n           This is the point.\n\nReply to reserve your mat.\n\nNamaste,\nMade Wijaya\nBali Harmony Spiritual Center\n\'We cannot fix your life.\n But the rice fields help.\''
+    },
+    {
+      unread: false, urgent: false,
+      from: 'Kevin Tran',
+      fromDetail: '(Personal Loan Officer, CitiBank Consumer Division)',
+      subject: 'Your Principal \u2014 A Matter of Interest',
+      received: 'Fri 11/11/94 2:14PM',
+      headers: 'From:    Kevin Tran <ktran@citibank-consumer.com>\nTo:      You\nDate:    Friday, November 11, 1994 2:14 PM\nSubject: Your Principal \u2014 A Matter of Interest',
+      body: 'Dear Valued Customer,\n\nThank you for your recent enquiry\nregarding our Personal Loan products.\n\nWe have reviewed your application.\n\nYou are interested in our principal.\nWe are interested in your principal residence.\n\nThis is what economists call\na balanced relationship.\n\nWe are pleased to offer you:\n  Loan amount:  $15,000\n  Interest rate: 18.9% p.a.\n  Term:          5 years\n  Monthly repayment: $384.62\n  Total repaid:  $23,077.20\n  Our profit:    $8,077.20\n  Your comment:  (none solicited)\n\nTo proceed, please provide:\n  - 3 months payslips\n  - 2 years tax returns\n  - 1 kidney (metaphorical)\n    (not metaphorical \u2014 legal dept)\n\nWe look forward to a long and\nasymmetric relationship.\n\nYours sincerely,\nKevin Tran\nPersonal Loan Officer, CitiBank\n\'Your Money Is Safe With Us\'\n(Terms and conditions apply)\n(We have the residence)\n(You have the loan)\n(This seemed fair in 1994)'
+    },
+    {
+      unread: false, urgent: false,
+      from: '\u7530\u4E2D\u8AA0\u53F8 (Tanaka Seiji)',
+      fromDetail: '(Unknown \u2014 Japanese Correspondence)',
+      subject: '\u91CD\u8981\u306A\u304A\u77E5\u3089\u305B\uFF0F\u7DCA\u6025\u5BFE\u5FDC\u304C\u5FC5\u8981\u3067\u3059',
+      received: 'Thu 11/10/94 3:33PM',
+      headers: 'From:    tanaka.seiji@nippon-net.co.jp\nTo:      \u304A\u5BA2\u69D8\u5404\u4F4D\nDate:    Thursday, November 10, 1994 3:33 PM\nSubject: \u91CD\u8981\u306A\u304A\u77E5\u3089\u305B\uFF0F\u7DCA\u6025\u5BFE\u5FDC\u304C\u5FC5\u8981\u3067\u3059',
+      body: '\u304A\u5BA2\u69D8\u5404\u4F4D\n\n\u5E73\u7D20\u3088\u308A\u683C\u5225\u306E\u3054\u611B\u9867\u3092\u8CE0\u308A\u3001\n\u8AA0\u306B\u3042\u308A\u304C\u3068\u3046\u3054\u3056\u3044\u307E\u3059\u3002\n\n\u3053\u306E\u305F\u3073\u3001\u5F0A\u793E\u30B7\u30B9\u30C6\u30E0\u306B\u304A\u3044\u3066\n\u91CD\u8981\u306A\u30A2\u30C3\u30D7\u30C7\u30FC\u30C8\u304C\u5FC5\u8981\u3068\u306A\u308A\u307E\u3057\u305F\u3002\n\n\u3064\u304D\u307E\u3057\u3066\u306F\u3001\u304A\u5BA2\u69D8\u306E\n\u30A2\u30AB\u30A6\u30F3\u30C8\u60C5\u5831\u306E\u78BA\u8A8D\u3092\u304A\u9858\u3044\u7533\u3057\u4E0A\u3052\u307E\u3059\u3002\n\n\u3010\u7DCA\u6025\u3011\u4EE5\u4E0B\u306E\u60C5\u5831\u3092\u3054\u8FD4\u4FE1\u304F\u3060\u3055\u3044\uFF1A\n  \u30FB\u304A\u540D\u524D\n  \u30FB\u9280\u884C\u53E3\u5EA7\u756A\u53F7\n  \u30FB\u6697\u8A3C\u756A\u53F7\n  \u30FB\u304A\u6BCD\u69D8\u306E\u65E7\u59D3\n\n\u203B\u3054\u5BFE\u5FDC\u3044\u305F\u3060\u3051\u306A\u3044\u5834\u5408\u3001\n\u3000\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u505C\u6B62\u3055\u305B\u3066\u3044\u305F\u3060\u304D\u307E\u3059\u3002\n\n\u203B\u3053\u306E\u30E1\u30FC\u30EB\u306B\u5FC3\u5F53\u305F\u308A\u306E\u306A\u3044\u65B9\u306F\u3001\n\u3000\u305D\u306E\u307E\u307E\u3054\u5BFE\u5FDC\u304F\u3060\u3055\u3044\u3002\n\n\u656C\u5177\n\u7530\u4E2D\u8AA0\u53F8\n\u65E5\u672C\u30A4\u30F3\u30BF\u30FC\u30CD\u30C3\u30C8\u682A\u5F0F\u4F1A\u793E\n\u30AB\u30B9\u30BF\u30DE\u30FC\u30B5\u30FC\u30D3\u30B9\u90E8\n\n(This email is a scam.\n We have included this disclaimer\n in English for international users.\n The Japanese version does not\n include this disclaimer.\n We apologize for the inconsistency.)'
+    },
+    {
+      unread: false, urgent: false,
+      from: 'Dr. Emmanuel Okafor',
+      fromDetail: '(Nigerian Ministry of Finance)',
+      subject: 'URGENT \u2014 CONFIDENTIAL TRANSFER $4.5M USD',
+      received: 'Wed 11/09/94 9:22AM',
+      headers: 'From:    Dr.Emmanuel.Okafor@nigeria-mof.gov.ng\nTo:      Undisclosed Recipients\nDate:    Wednesday, November 09, 1994 9:22 AM\nSubject: URGENT \u2014 CONFIDENTIAL TRANSFER $4.5M USD',
+      body: 'DEAR FRIEND AND TRUSTED ASSOCIATE,\n\nI AM DR. EMMANUEL OKAFOR,\nSENIOR DEPUTY MINISTER OF FINANCE,\nFEDERAL REPUBLIC OF NIGERIA.\n\nI WRITE TO YOU IN ABSOLUTE CONFIDENCE\nAND MAXIMUM URGENCY.\n\nA SUM OF $4,500,000.00 USD\n(FOUR MILLION FIVE HUNDRED THOUSAND)\nIS CURRENTLY TRAPPED IN A GOVERNMENT\nACCOUNT DUE TO BUREAUCRATIC REGULATION.\n\nI REQUIRE A TRUSTED FOREIGN PARTNER\nTO RECEIVE THIS SUM TEMPORARILY.\nYOU WILL RECEIVE 30% ($1,350,000.00)\nFOR YOUR COOPERATION AND SILENCE.\n\nTHIS IS 100% LEGAL.\nI MENTION THIS BECAUSE IT IS IMPORTANT\nTHAT YOU BELIEVE IT IS LEGAL.\n\nPLEASE RESPOND WITH:\n  - FULL NAME\n  - BANK ACCOUNT NUMBER\n  - ROUTING NUMBER\n  - MOTHER\'S MAIDEN NAME\n    (FOR LEGAL VERIFICATION PURPOSES)\n    (DEFINITELY NOT OTHER PURPOSES)\n\nGOD BLESS YOU AND YOUR ACCOUNT,\n\nDR. EMMANUEL OKAFOR\n(PhD, University of Lagos, 1987)\n(The PhD is real)\n(The money is also real)\n(Please believe both)'
+    },
+    {
+      unread: true, urgent: false,
+      from: '\u0414\u043C\u0438\u0442\u0440\u0438\u0439 \u0412. (Dmitriy V.)',
+      fromDetail: '(Unknown \u2014 Russian Correspondence)',
+      subject: '\u041F\u043E\u0437\u0434\u0440\u0430\u0432\u043B\u044F\u0435\u043C! \u0421\u043F\u0435\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0435 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435!',
+      received: 'Tue 11/08/94 10:01AM',
+      headers: 'From:    dmitriy.v@runet-mail.ru\nTo:      \u0423\u0432\u0430\u0436\u0430\u0435\u043C\u044B\u0439 \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C\nDate:    Tuesday, November 08, 1994 10:01 AM\nSubject: \u041F\u043E\u0437\u0434\u0440\u0430\u0432\u043B\u044F\u0435\u043C! \u0421\u043F\u0435\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0435 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435!',
+      body: '\u0423\u0432\u0430\u0436\u0430\u0435\u043C\u044B\u0439 \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C,\n\n\u041F\u043E\u0437\u0434\u0440\u0430\u0432\u043B\u044F\u0435\u043C! \u0412\u044B \u0432\u044B\u0438\u0433\u0440\u0430\u043B\u0438!\n\n\u0427\u0442\u043E \u0438\u043C\u0435\u043D\u043D\u043E \u0432\u044B \u0432\u044B\u0438\u0433\u0440\u0430\u043B\u0438 \u2014\n\u043C\u044B \u0441\u043E\u043E\u0431\u0449\u0438\u043C \u043F\u043E\u0437\u0436\u0435.\n\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043D\u0430\u043C \u043D\u0443\u0436\u043D\u0430 \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F.\n\n\u041F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430, \u043F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u044C\u0442\u0435:\n  \u2022 \u0412\u0430\u0448\u0435 \u043F\u043E\u043B\u043D\u043E\u0435 \u0438\u043C\u044F\n  \u2022 \u041D\u043E\u043C\u0435\u0440 \u0431\u0430\u043D\u043A\u043E\u0432\u0441\u043A\u043E\u0433\u043E \u0441\u0447\u0451\u0442\u0430\n  \u2022 \u0414\u0435\u0432\u0438\u0447\u044C\u044F \u0444\u0430\u043C\u0438\u043B\u0438\u044F \u043C\u0430\u0442\u0435\u0440\u0438\n  \u2022 \u041B\u044E\u0431\u0438\u043C\u044B\u0439 \u0446\u0432\u0435\u0442\n    (\u0434\u043B\u044F \u0432\u0435\u0440\u0438\u0444\u0438\u043A\u0430\u0446\u0438\u0438 \u043B\u0438\u0447\u043D\u043E\u0441\u0442\u0438)\n    (\u044D\u0442\u043E \u0432\u0430\u0436\u043D\u043E)\n    (\u043F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430, \u043D\u0435 \u043F\u0440\u043E\u043F\u0443\u0441\u043A\u0430\u0439\u0442\u0435)\n\n\u041F\u0440\u0438\u0437 \u0431\u0443\u0434\u0435\u0442 \u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D \u0432 \u0442\u0435\u0447\u0435\u043D\u0438\u0435\n6-8 \u043D\u0435\u0434\u0435\u043B\u044C \u043F\u043E\u0441\u043B\u0435 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u043E\u043F\u043B\u0430\u0442\u044B.\n\n\u0421\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438: $99 USD\n\u0421\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C \u043F\u0440\u0438\u0437\u0430: \u0431\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u043E*\n*\u043F\u0440\u0438\u0437 \u043D\u0435 \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u0431\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u044B\u043C\n\n\u0421 \u0443\u0432\u0430\u0436\u0435\u043D\u0438\u0435\u043C,\n\u0414\u043C\u0438\u0442\u0440\u0438\u0439 \u0412.\n\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0430\u044F \u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442 \u041A\u043E\u0440\u043F\u043E\u0440\u0430\u0446\u0438\u044F\n\u041E\u0442\u0434\u0435\u043B \u041F\u0440\u0438\u0437\u043E\u0432 \u0438 \u0412\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0435\u0439\n\n(Translation for reference:\n You have won something.\n We will tell you what later.\n Please send money first.\n This is standard procedure.\n In 1994.\n In Russia.\n We are sorry.)'
+    },
+    {
+      unread: true, urgent: false,
+      from: '\u0E04\u0E38\u0E13\u0E2A\u0E21\u0E0A\u0E32\u0E22 (Khun Somchai)',
+      fromDetail: '(Unknown \u2014 Thai Correspondence)',
+      subject: '\u0E1B\u0E23\u0E30\u0E01\u0E32\u0E28\u0E2A\u0E33\u0E04\u0E31\u0E0D! \u0E04\u0E38\u0E13\u0E44\u0E14\u0E49\u0E23\u0E31\u0E1A\u0E23\u0E32\u0E07\u0E27\u0E31\u0E25!',
+      received: 'Mon 11/07/94 4:20PM',
+      headers: 'From:    somchai.p@thaimail.co.th\nTo:      \u0E1C\u0E39\u0E49\u0E43\u0E0A\u0E49\u0E17\u0E35\u0E48\u0E21\u0E35\u0E04\u0E48\u0E32\nDate:    Monday, November 07, 1994 4:20 PM\nSubject: \u0E1B\u0E23\u0E30\u0E01\u0E32\u0E28\u0E2A\u0E33\u0E04\u0E31\u0E0D! \u0E04\u0E38\u0E13\u0E44\u0E14\u0E49\u0E23\u0E31\u0E1A\u0E23\u0E32\u0E07\u0E27\u0E31\u0E25!',
+      body: '\u0E40\u0E23\u0E35\u0E22\u0E19 \u0E1C\u0E39\u0E49\u0E43\u0E0A\u0E49\u0E07\u0E32\u0E19\u0E17\u0E35\u0E48\u0E21\u0E35\u0E04\u0E48\u0E32\n\n\u0E22\u0E34\u0E19\u0E14\u0E35\u0E14\u0E49\u0E27\u0E22! \u0E04\u0E38\u0E13\u0E44\u0E14\u0E49\u0E23\u0E31\u0E1A\u0E40\u0E25\u0E37\u0E2D\u0E01\u0E40\u0E1B\u0E47\u0E19\n\u0E1C\u0E39\u0E49\u0E42\u0E0A\u0E04\u0E14\u0E35\u0E1B\u0E23\u0E30\u0E08\u0E33\u0E40\u0E14\u0E37\u0E2D\u0E19\u0E1E\u0E24\u0E28\u0E08\u0E34\u0E01\u0E32\u0E22\u0E19!\n\n\u0E23\u0E32\u0E07\u0E27\u0E31\u0E25\u0E02\u0E2D\u0E07\u0E04\u0E38\u0E13\u0E04\u0E37\u0E2D:\n  \uD83C\uDFC6 \u0E40\u0E07\u0E34\u0E19\u0E2A\u0E14 500,000 \u0E1A\u0E32\u0E17\n  \uD83C\uDFC6 \u0E2B\u0E23\u0E37\u0E2D\u0E40\u0E17\u0E35\u0E22\u0E1A\u0E40\u0E17\u0E48\u0E32\u0E43\u0E19 USD\n  \uD83C\uDFC6 \u0E2B\u0E23\u0E37\u0E2D\u0E2A\u0E34\u0E48\u0E07\u0E17\u0E35\u0E48\u0E04\u0E25\u0E49\u0E32\u0E22\u0E01\u0E31\u0E19\n\n\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E23\u0E31\u0E1A\u0E23\u0E32\u0E07\u0E27\u0E31\u0E25 \u0E01\u0E23\u0E38\u0E13\u0E32\u0E2A\u0E48\u0E07:\n  \u2022 \u0E0A\u0E37\u0E48\u0E2D-\u0E19\u0E32\u0E21\u0E2A\u0E01\u0E38\u0E25\n  \u2022 \u0E40\u0E25\u0E02\u0E1A\u0E31\u0E0D\u0E0A\u0E35\u0E18\u0E19\u0E32\u0E04\u0E32\u0E23\n  \u2022 \u0E40\u0E25\u0E02 PIN\n  \u2022 \u0E04\u0E48\u0E32\u0E14\u0E33\u0E40\u0E19\u0E34\u0E19\u0E01\u0E32\u0E23 2,500 \u0E1A\u0E32\u0E17\n    (\u0E08\u0E48\u0E32\u0E22\u0E01\u0E48\u0E2D\u0E19\u0E23\u0E31\u0E1A\u0E23\u0E32\u0E07\u0E27\u0E31\u0E25)\n    (\u0E19\u0E35\u0E48\u0E04\u0E37\u0E2D\u0E02\u0E31\u0E49\u0E19\u0E15\u0E2D\u0E19\u0E1B\u0E01\u0E15\u0E34)\n    (\u0E01\u0E23\u0E38\u0E13\u0E32\u0E2D\u0E22\u0E48\u0E32\u0E16\u0E32\u0E21\u0E40\u0E1E\u0E34\u0E48\u0E21\u0E40\u0E15\u0E34\u0E21)\n\n\u0E15\u0E34\u0E14\u0E15\u0E48\u0E2D\u0E01\u0E25\u0E31\u0E1A\u0E20\u0E32\u0E22\u0E43\u0E19 48 \u0E0A\u0E31\u0E48\u0E27\u0E42\u0E21\u0E07\n\u0E21\u0E34\u0E09\u0E30\u0E19\u0E31\u0E49\u0E19\u0E23\u0E32\u0E07\u0E27\u0E31\u0E25\u0E08\u0E30\u0E15\u0E01\u0E40\u0E1B\u0E47\u0E19\u0E02\u0E2D\u0E07\u0E1C\u0E39\u0E49\u0E2D\u0E37\u0E48\u0E19\n\n\u0E14\u0E49\u0E27\u0E22\u0E04\u0E27\u0E32\u0E21\u0E08\u0E23\u0E34\u0E07\u0E43\u0E08\n\u0E04\u0E38\u0E13\u0E2A\u0E21\u0E0A\u0E32\u0E22 \u0E1E\u0E07\u0E29\u0E4C\u0E2A\u0E38\u0E27\u0E23\u0E23\u0E13\n\u0E1A\u0E23\u0E34\u0E29\u0E31\u0E17 \u0E44\u0E17\u0E22\u0E2D\u0E34\u0E19\u0E40\u0E17\u0E2D\u0E23\u0E4C\u0E40\u0E19\u0E47\u0E15 \u0E08\u0E33\u0E01\u0E31\u0E14\n\u0E41\u0E1C\u0E19\u0E01\u0E23\u0E32\u0E07\u0E27\u0E31\u0E25\u0E41\u0E25\u0E30\u0E42\u0E2D\u0E01\u0E32\u0E2A\n\n(English summary:\n You have won 500,000 Baht.\n Please send 2,500 Baht first.\n To receive the 500,000 Baht.\n We understand this seems odd.\n It is not odd.\n Please send the 2,500 Baht.\n Thank you for using Thai Internet.)'
+    },
+    {
+      unread: true, urgent: false,
+      from: 'Randy Kowalski',
+      fromDetail: '(Devoted Member, Church of Celestial Truth)',
+      subject: 'Praise Report \u2014 The Comet Did Not Come',
+      received: 'Sun 11/13/94 3:17PM',
+      headers: 'From:    Randy Kowalski <rkowalski@aol.com>\nTo:      Friends, Family, Anyone Who Will Listen\nDate:    Sunday, November 13, 1994 3:17 PM\nSubject: Praise Report \u2014 The Comet Did Not Come',
+      body: 'Dear Brothers, Sisters, and Acquaintances,\n\nI am writing to share a testimony\nof faith, sacrifice, and lid-based salvation.\n\nIn January 1993, Brother Elias \u2014\nour church\'s head astronomer\nand former Radio Shack employee \u2014\nreceived a revelation.\n\nA comet.\nHeaded directly for Cedar Falls, Iowa.\nImpact: December 1993.\nCertainty: 100%.\nSource: a dream, and also some calculations\non a napkin at Denny\'s.\n\nOur pastor, Pastor Glenn,\nconfirmed the prophecy.\nPastor Glenn has never been wrong.\n(Previous prophecies not discussed here.)\n\nWe acted immediately.\n\nMY FAMILY\'S SACRIFICE:\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  House: sold to the church.\n         Market value: $94,000.\n         Church price: $31,000.\n         (A blessed discount.)\n         (The church needed it more.)\n         (They have since resold it for $91,000.)\n         (This is not relevant.)\n\n  Children: withdrawn from school.\n            Education felt unnecessary\n            given the comet situation.\n            Tyler (14) is adjusting.\n            Madison (11) has questions.\n            We are praying about the questions.\n\n  Jobs: surrendered.\n        Karen quit her nursing position.\n        I quit my job at the hardware store.\n        (They have since hired someone else.)\n        (His name is also Randy.)\n        (This felt like a sign.)\n\nMY BLESSED MINISTRY:\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nPastor Glenn assigned me a mission.\nThe comet, he explained, could be deflected\nby sufficient quantities of\nhigh-grade aluminum pot lids.\n\nI do not understand the science.\nBrother Elias explained it.\nThere was a diagram.\nThe diagram made sense at the time.\n\nI spent eleven months selling pot lids.\nDoor to door.\nCedar Falls. Neighboring towns.\nOnce, briefly, Des Moines.\n\n  Units sold:    2,847 lids\n  Price per lid: $12.99\n  Total revenue: $36,982.53\n  My commission: $0.00\n                 (a cheerful giver\n                  gives cheerfully)\n  Church revenue: $36,982.53\n  Church comment: \'God is good.\'\n\nEvery household in a 12-mile radius\nnow owns at least one lid.\nSeveral own many.\nMrs. Patterson owns forty-three.\nShe was very concerned about the comet.\nShe lives alone.\nThe lids fill her second bedroom.\n\nTHE MIRACLE:\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nDecember came.\nThe comet did not.\n\nI cannot express the joy.\nWe gathered at the church.\nWe wept.\nPastor Glenn said the lids had worked.\nBrother Elias confirmed this scientifically.\n(New napkin. Same Denny\'s.)\n\nThe comet had been deflected\nby the collective shield\nof 2,847 aluminum pot lids\ndistributed across Cedar Falls, Iowa.\n\nCedar Falls is safe.\nYou are welcome, Cedar Falls.\n\nOUR CURRENT SITUATION:\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nWe are renting a studio apartment.\nIt is small but blessed.\nTyler sleeps in the kitchen area.\nMadison has built a fort from pot lid boxes.\nShe seems happier in the fort.\n\nWe filed for bankruptcy in February.\nThe court was very understanding.\nThe judge asked several questions\nabout the lids.\nWe answered them with faith.\n\nThe bankruptcy has been discharged.\nOur debts: forgiven.\n(By the federal government,\n not the church.\n The church has not forgiven the debts.\n The church owns our house now.\n These are separate matters.)\n\nPRAISE REPORT CONCLUSION:\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe comet did not come.\nMy family is alive.\nCedar Falls is intact.\nWe have a fort made of boxes.\nTyler will re-enroll in school next year.\nProbably.\nMadison says she wants to be an astronomer.\n\nWe are so blessed.\n\nIf you would like to purchase a pot lid,\nI still have eleven.\n$12.99 each.\nProtection not guaranteed\nagainst future comets.\nBut you never know.\n\nIn His grace,\nRandy Kowalski\nCedar Falls, Iowa\n\nP.S. Pastor Glenn has received a new revelation.\n     Something about a solar flare.\n     He is looking into cookware.'
+    }
+  ];
+
+  function getEmailField(email, field) {
+    var val = email[field];
+    return typeof val === 'function' ? val() : val;
+  }
+
+  function openInbox() {
+    var el = WM.create('inbox', 'Inbox - Windows Messaging', 540, 380, '');
+    var content = el.querySelector('.window-content');
+    content.style.cssText = 'padding:0;display:flex;flex-direction:column;background:#C0C0C0;min-height:0;flex:1;overflow:hidden;';
+
+    // Toolbar
+    var toolbar = document.createElement('div');
+    toolbar.style.cssText = 'height:28px;min-height:28px;background:#C0C0C0;display:flex;align-items:center;padding:2px 4px;gap:4px;box-shadow:inset -1px -1px #808080,inset 1px 1px #fff;flex-shrink:0;';
+    var tbBtns = [
+      { label: '\uD83D\uDCDD Compose' },
+      { label: '\u21A9 Reply' },
+      { label: '\u2192 Forward' },
+      { label: '\uD83D\uDDD1 Delete' }
+    ];
+    for (var t = 0; t < tbBtns.length; t++) {
+      (function (b) {
+        var btn = document.createElement('button');
+        btn.className = 'dialog-btn';
+        btn.style.cssText = 'min-width:auto;height:20px;padding:0 8px;font-size:9px;';
+        btn.textContent = b.label;
+        btn.addEventListener('click', function () { showInboxUpgradeDialog(); });
+        toolbar.appendChild(btn);
+      })(tbBtns[t]);
+    }
+    content.appendChild(toolbar);
+
+    // Email list panel
+    var listPanel = document.createElement('div');
+    listPanel.className = 'inbox-list';
+    listPanel.style.height = '160px';
+    listPanel.style.minHeight = '160px';
+    listPanel.style.background = '#fff';
+
+    // Column headers
+    var headerRow = document.createElement('div');
+    headerRow.style.cssText = 'display:flex;align-items:center;padding:2px 4px;gap:8px;background:#C0C0C0;font-size:10px;font-weight:bold;border-bottom:1px solid #808080;box-shadow:inset 1px 1px #808080,inset -1px -1px #fff;';
+    var cols = [
+      { text: '!', width: '10px' },
+      { text: '', width: '10px' },
+      { text: 'From', width: '140px' },
+      { text: 'Subject', width: '' },
+      { text: 'Received', width: '120px' }
+    ];
+    for (var c = 0; c < cols.length; c++) {
+      var colEl = document.createElement('span');
+      colEl.textContent = cols[c].text;
+      if (cols[c].width) colEl.style.width = cols[c].width;
+      else colEl.style.flex = '1';
+      colEl.style.overflow = 'hidden';
+      colEl.style.textOverflow = 'ellipsis';
+      colEl.style.whiteSpace = 'nowrap';
+      headerRow.appendChild(colEl);
+    }
+    listPanel.appendChild(headerRow);
+
+    // Email body panel
+    var bodyPanel = document.createElement('div');
+    bodyPanel.className = 'inbox-body';
+    bodyPanel.textContent = 'Select a message to read.';
+
+    var selectedIndex = -1;
+
+    function selectEmail(idx) {
+      selectedIndex = idx;
+      var rows = listPanel.querySelectorAll('.inbox-row');
+      for (var r = 0; r < rows.length; r++) {
+        rows[r].classList.remove('selected');
+      }
+      rows[idx].classList.add('selected');
+
+      // Mark as read
+      INBOX_EMAILS[idx].unread = false;
+      var dot = rows[idx].querySelector('.unread-dot');
+      if (dot) dot.textContent = '';
+      rows[idx].classList.remove('unread');
+
+      // Show body
+      var email = INBOX_EMAILS[idx];
+      var headersText = getEmailField(email, 'headers');
+      var bodyText = getEmailField(email, 'body');
+      bodyPanel.innerHTML = '';
+      var hdr = document.createElement('div');
+      hdr.className = 'inbox-headers';
+      hdr.textContent = headersText;
+      bodyPanel.appendChild(hdr);
+      var bd = document.createElement('div');
+      bd.style.padding = '8px';
+      bd.textContent = bodyText;
+      bodyPanel.appendChild(bd);
+    }
+
+    function openEmailWindow(idx) {
+      var email = INBOX_EMAILS[idx];
+      var subj = email.subject;
+      var headersText = getEmailField(email, 'headers');
+      var bodyText = getEmailField(email, 'body');
+
+      var emailEl = WM.create('email-' + idx, subj + ' - Windows Messaging', 400, 320, '');
+      var emailContent = emailEl.querySelector('.window-content');
+      emailContent.style.cssText = 'padding:0;display:flex;flex-direction:column;background:#fff;min-height:0;flex:1;overflow:hidden;';
+
+      var hdr = document.createElement('div');
+      hdr.className = 'inbox-headers';
+      hdr.textContent = headersText;
+      emailContent.appendChild(hdr);
+
+      var bd = document.createElement('div');
+      bd.className = 'inbox-body';
+      bd.style.flex = '1';
+      bd.textContent = bodyText;
+      emailContent.appendChild(bd);
+    }
+
+    // Build email rows
+    for (var i = 0; i < INBOX_EMAILS.length; i++) {
+      (function (idx) {
+        var email = INBOX_EMAILS[idx];
+        var row = document.createElement('div');
+        row.className = 'inbox-row';
+        if (email.unread) row.classList.add('unread');
+        if (email.urgent) row.classList.add('urgent');
+        if (idx % 2 === 1 && !email.urgent) row.style.background = '#f5f5f5';
+
+        // Urgent icon
+        var urgentCol = document.createElement('span');
+        urgentCol.style.width = '10px';
+        urgentCol.style.fontSize = '10px';
+        urgentCol.textContent = email.urgent ? '\u26A0\uFE0F' : '';
+        row.appendChild(urgentCol);
+
+        // Unread dot
+        var dotCol = document.createElement('span');
+        dotCol.className = 'unread-dot';
+        dotCol.textContent = email.unread ? '\u25CF' : '';
+        row.appendChild(dotCol);
+
+        // From
+        var fromCol = document.createElement('span');
+        fromCol.style.cssText = 'width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+        fromCol.textContent = email.from;
+        row.appendChild(fromCol);
+
+        // Subject
+        var subjCol = document.createElement('span');
+        subjCol.style.cssText = 'flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+        subjCol.textContent = email.subject;
+        row.appendChild(subjCol);
+
+        // Received
+        var recvCol = document.createElement('span');
+        recvCol.style.cssText = 'width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right;';
+        recvCol.textContent = getEmailField(email, 'received');
+        row.appendChild(recvCol);
+
+        row.addEventListener('click', function () { selectEmail(idx); });
+        row.addEventListener('dblclick', function () { openEmailWindow(idx); });
+
+        listPanel.appendChild(row);
+      })(i);
+    }
+
+    content.appendChild(listPanel);
+    content.appendChild(bodyPanel);
+
+    // Status bar
+    var statusBar = document.createElement('div');
+    statusBar.className = 'status-bar';
+    statusBar.textContent = '11 messages \u00B7 8 unread \u00B7 Last updated: Never \u00B7 Server: not connected \u00B7 This is fine.';
+    el.appendChild(statusBar);
+  }
+
+  function showInboxUpgradeDialog() {
+    var overlay = document.createElement('div');
+    overlay.id = 'modal-overlay';
+    document.body.appendChild(overlay);
+
+    var dialog = document.createElement('div');
+    dialog.className = 'dialog';
+    dialog.style.zIndex = '10001';
+    dialog.style.minWidth = '320px';
+
+    var titleBar = document.createElement('div');
+    titleBar.className = 'title-bar';
+    var titleText = document.createElement('span');
+    titleText.className = 'title-text';
+    titleText.textContent = 'Windows Messaging \u2014 Upgrade Required';
+    titleBar.appendChild(titleText);
+    dialog.appendChild(titleBar);
+
+    var body = document.createElement('div');
+    body.className = 'dialog-body';
+    var icon = document.createElement('div');
+    icon.className = 'dialog-icon';
+    icon.textContent = '\u26A0\uFE0F';
+
+    var now = new Date();
+    now.setMinutes(now.getMinutes() + 1);
+    var hh = now.getHours() % 12 || 12;
+    var mm = now.getMinutes().toString().padStart(2, '0');
+    var ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+    var deadline = hh + ':' + mm + ' ' + ampm;
+
+    var msg = document.createElement('div');
+    msg.className = 'dialog-message';
+    msg.textContent = 'This feature requires\nOutlook Electronic Mail 94\u2122\n\nWindows Messaging is a limited\npreview of email technology.\n\nTo compose, reply, forward, or delete:\nPlease purchase Outlook Electronic\nMail 94\u2122 \u2014 Full Edition.\n\n~~$399~~  NOW $349.95\nOne-time purchase.\nNo refunds. For the record.\n\nYour boss is waiting for your reply.\nDeadline: ' + deadline + '\nHe is not a patient man.';
+    body.appendChild(icon);
+    body.appendChild(msg);
+    dialog.appendChild(body);
+
+    var btnRow = document.createElement('div');
+    btnRow.className = 'dialog-buttons';
+
+    var upgradeBtn = document.createElement('button');
+    upgradeBtn.className = 'dialog-btn';
+    upgradeBtn.textContent = 'Upgrade Now';
+    upgradeBtn.addEventListener('click', function () {
+      dialog.remove();
+      removeOverlay();
+      Crash.trigger('Outlook Electronic Mail cannot\nbe purchased at this time.\n\nYour boss has been notified.\nThe deadline has passed.\n\nFor the record.');
+    });
+
+    var laterBtn = document.createElement('button');
+    laterBtn.className = 'dialog-btn';
+    laterBtn.textContent = 'Maybe Later';
+    laterBtn.addEventListener('click', function () {
+      dialog.remove();
+      removeOverlay();
+    });
+
+    btnRow.appendChild(upgradeBtn);
+    btnRow.appendChild(laterBtn);
+    dialog.appendChild(btnRow);
+
+    document.body.appendChild(dialog);
+  }
+
   function init() {
     wireDesktopIcons();
     initStartMenu();
@@ -1510,7 +2012,8 @@
     openBitcoinFile: openBitcoinFile,
     openMSFTNote: openMSFTNote,
     openAviPlayer: openAviPlayer,
-    openWavPlayer: openWavPlayer
+    openWavPlayer: openWavPlayer,
+    openInbox: openInbox
   };
 
 })();
